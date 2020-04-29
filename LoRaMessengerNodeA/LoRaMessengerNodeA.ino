@@ -22,7 +22,7 @@ int count = 0;
 
 // Replace with your network credentials
 const char* ssid     = "ESP32 AccessPointNodeA";
-const char* password = "nodeA";
+const char* password = "nodeAnodeA";
 
 WiFiServer server(80);
 String header;

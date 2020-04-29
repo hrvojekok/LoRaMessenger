@@ -22,7 +22,7 @@ int count = 0;
 
 // Replace with your network credentials
 const char* ssid     = "ESP32 AccessPointNodeB";
-const char* password = "nodeB";
+const char* password = "nodeBnodeB";
 
 WiFiServer server(80);
 String header;
@@ -49,6 +49,8 @@ void setup() {
   Serial.print("Setting AP (Access Point)…");
   // Remove the password parameter, if you want the AP (Access Point) to be open
   WiFi.softAP(ssid, password);
+  Serial.println(ssid);
+  Serial.println(password);
 
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
