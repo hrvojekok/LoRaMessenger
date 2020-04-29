@@ -21,8 +21,8 @@ int interval = 2000;
 int count = 0;
 
 // Replace with your network credentials
-const char* ssid     = "ESP32AccessPoint";
-const char* password = "12345678";
+const char* ssid     = "ESP32 AccessPointNodeA";
+const char* password = "nodeA";
 
 WiFiServer server(80);
 String header;
@@ -106,7 +106,7 @@ void loop() {
             client.println(".button2 {background-color: #555555;}</style></head>");
             
             // Web Page Heading
-            client.println("<body><h1>ESP32 Web Server</h1>");
+            client.println("<body><h1>ESP32 Web Server Node A</h1>");
             
   
             client.println("</body></html>");
