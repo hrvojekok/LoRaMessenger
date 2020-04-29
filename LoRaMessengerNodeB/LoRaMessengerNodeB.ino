@@ -27,7 +27,6 @@ const char* password = "nodeBnodeB";
 WiFiServer server(80);
 String header;
 
-
 void setup() {
   Serial.begin(9600);
 
