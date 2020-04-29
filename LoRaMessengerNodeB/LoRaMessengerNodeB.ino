@@ -19,6 +19,7 @@ byte destinationAddress = 0xAA;
 long lastSendTime = 0;
 int interval = 2000;
 int count = 0;
+String incoming = "";
 
 // Replace with your network credentials
 const char* ssid     = "ESP32 AccessPointNodeB";
@@ -59,6 +60,44 @@ void setup() {
 
 }
 
+
+void sendMessage(String outgoing) {
+  LoRa.beginPacket();
+  LoRa.write(destinationAddress);
+  LoRa.write(localAddress);
+  LoRa.write(outgoing.length());
+  LoRa.print(outgoing);
+  LoRa.endPacket();
+}
+
+void receiveMessage(int packetSize) {
+  if (packetSize == 0) return;
+
+  int recipient = LoRa.read();
+  byte sender = LoRa.read();
+  byte incomingLength = LoRa.read();
+
+  incoming = "";
+
+  while (LoRa.available()) {
+    incoming += (char)LoRa.read();
+  }
+
+  if (incomingLength != incoming.length()) {
+    Serial.println("Error: Message length does not match length");
+    return;
+  }
+
+  if (recipient != localAddress) {
+    Serial.println("Error: Recipient address does not match local address");
+    return;
+  }
+
+  Serial.print("Received data " + incoming);
+  Serial.print(" from 0x" + String(sender, HEX));
+  Serial.println(" to 0x" + String(recipient, HEX));
+}
+
 void loop() {
    if (millis() - lastSendTime > interval) {
       String sensorData = String(count++);
@@ -88,7 +127,8 @@ void loop() {
   
       
       // Web Page Heading
-      client.println("<body><h1>ESP32 Web Server Node A</h1>");
+      client.println("<body><h1>ESP32 Web Server Node B</h1>");
+      client.println("<h2>" + incoming + "</h2>");
       
   
       client.println("</body></html>");
@@ -107,42 +147,4 @@ void loop() {
       Serial.println("");
     }
   }
-}
-
-
-void sendMessage(String outgoing) {
-  LoRa.beginPacket();
-  LoRa.write(destinationAddress);
-  LoRa.write(localAddress);
-  LoRa.write(outgoing.length());
-  LoRa.print(outgoing);
-  LoRa.endPacket();
-}
-
-void receiveMessage(int packetSize) {
-  if (packetSize == 0) return;
-
-  int recipient = LoRa.read();
-  byte sender = LoRa.read();
-  byte incomingLength = LoRa.read();
-
-  String incoming = "";
-
-  while (LoRa.available()) {
-    incoming += (char)LoRa.read();
-  }
-
-  if (incomingLength != incoming.length()) {
-    Serial.println("Error: Message length does not match length");
-    return;
-  }
-
-  if (recipient != localAddress) {
-    Serial.println("Error: Recipient address does not match local address");
-    return;
-  }
-
-  Serial.print("Received data " + incoming);
-  Serial.print(" from 0x" + String(sender, HEX));
-  Serial.println(" to 0x" + String(recipient, HEX));
 }

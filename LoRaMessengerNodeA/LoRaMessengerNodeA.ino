@@ -19,6 +19,7 @@ byte destinationAddress = 0xBB;
 long lastSendTime = 0;
 int interval = 2000;
 int count = 0;
+String incoming = "";
 
 // Replace with your network credentials
 const char* ssid     = "ESP32 AccessPointNodeA";
@@ -74,7 +75,7 @@ void receiveMessage(int packetSize) {
   byte sender = LoRa.read();
   byte incomingLength = LoRa.read();
 
-  String incoming = "";
+  incoming = "";
 
   while (LoRa.available()) {
     incoming += (char)LoRa.read();
@@ -113,68 +114,35 @@ void loop() {
     WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,
-    Serial.println("New Client.");          // print a message out in the serial port
-    String currentLine = "";                // make a String to hold incoming data from the client
-
-    client.println("HTTP/1.1 200 OK");
-    client.println("Content-type:text/html");
-    client.println("Connection: close");
-    client.println();
-    
-
-    
-    // Web Page Heading
-    client.println("<body><h1>ESP32 Web Server Node A</h1>");
-    
-
-    client.println("</body></html>");
-    
-    // The HTTP response ends with another blank line
-    client.println();
-
-    
-    while (client.connected()) {            // loop while the client's connected
-//      if (client.available()) {             // if there's bytes to read from the client,
-//        char c = client.read();             // read a byte, then
-//        Serial.write(c);                    // print it out the serial monitor
-//        header += c;
-//        if (c == '\n') {                    // if the byte is a newline character
-//          // if the current line is blank, you got two newline characters in a row.
-//          // that's the end of the client HTTP request, so send a response:
-//          if (currentLine.length() == 0) {
-//            // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-//            // and a content-type so the client knows what's coming, then a blank line:
-//            client.println("HTTP/1.1 200 OK");
-//            client.println("Content-type:text/html");
-//            client.println("Connection: close");
-//            client.println();
-//            
-// 
-//            
-//            // Web Page Heading
-//            client.println("<body><h1>ESP32 Web Server Node A</h1>");
-//            
-//  
-//            client.println("</body></html>");
-//            
-//            // The HTTP response ends with another blank line
-//            client.println();
-//            // Break out of the while loop
-//            break;
-//          } else { // if you got a newline, then clear currentLine
-//            currentLine = "";
-//          }
-//        } else if (c != '\r') {  // if you got anything else but a carriage return character,
-//          currentLine += c;      // add it to the end of the currentLine
-//        }
-//      }
-//    }
-    // Clear the header variable
-    header = "";
-    // Close the connection
-    client.stop();
-    Serial.println("Client disconnected.");
-    Serial.println("");
+      Serial.println("New Client.");          // print a message out in the serial port
+      String currentLine = "";                // make a String to hold incoming data from the client
+  
+      client.println("HTTP/1.1 200 OK");
+      client.println("Content-type:text/html");
+      client.println("Connection: close");
+      client.println();
+      
+  
+      
+      // Web Page Heading
+      client.println("<body><h1>ESP32 Web Server Node A</h1>");
+      client.println("<h2>" + incoming + "</h2>");
+      
+  
+      client.println("</body></html>");
+      
+      // The HTTP response ends with another blank line
+      client.println();
+  
+      
+      while (client.connected()) {            // loop while the client's connected
+  
+      // Clear the header variable
+      header = "";
+      // Close the connection
+      client.stop();
+      Serial.println("Client disconnected.");
+      Serial.println("");
+    }
   }
-}
 }
