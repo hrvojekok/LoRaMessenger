@@ -143,7 +143,7 @@ void loop() {
 
           //client.println("<h1>HTML form GET example</H1>");
 
-          client.println("<form action='/' method=post >"); //uses IP/port of web page
+          client.println("<form action='/' method=get >"); //uses IP/port of web page
 
           client.println("Your message: <input type=text name='message' value='' size='25' ><br>");
 
