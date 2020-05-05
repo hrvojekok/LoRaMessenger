@@ -20,6 +20,7 @@ long lastSendTime = 0;
 int interval = 2000;
 int count = 0;
 String incoming = "";
+String helper = "";
 
 // Replace with your network credentials
 const char* ssid     = "ESP32 AccessPointNodeA";
@@ -116,20 +117,71 @@ void loop() {
   if (client) {                             // If a new client connects,
       Serial.println("New Client.");          // print a message out in the serial port
       String currentLine = "";                // make a String to hold incoming data from the client
+
+            //added
+            char c = client.read();
+            //end of added
+
+              //read char by char HTTP request
+              if (helper.length() < 100) {
+      
+                //store characters to string
+                helper += c;
+                Serial.print(c);
+              }
+
   
       client.println("HTTP/1.1 200 OK");
       client.println("Content-type:text/html");
       client.println("Connection: close");
       client.println();
       
-  
+
+
+          client.println("<html>");
+          client.println("<body>");
+
+          //client.println("<h1>HTML form GET example</H1>");
+
+          client.println("<form action='/' method=post >"); //uses IP/port of web page
+
+          client.println("Your message: <input type=text name='message' value='' size='25' ><br>");
+
+          //client.println("<script>var url = new URL(url_string); url.searchParams.get(\"c\");</script>");
+
+          client.println("<script> function getQueryVariable(variable){ var query = window.location.search.substring(1); var vars = query.split(\"&\"); for (var i=0;i<vars.length;i++) { var pair = vars[i].split(\"=\"); if(pair[0] == variable){return pair[1];} } return(false); } </script>");
+          client.println("<script> getQueryVariable(\"message\"); if(document.getElementById('number1').checked) { document.write(\"<h1>Hello member</h1>\"); }  </script>");
+
+          
+          //client.println("var url = new URL(url_string);");
+          //client.println("url.searchParams.get(\"c\");");
+          
+          client.println("<input type=submit name='submit' value='Send'>");
+
+          client.println("</form>");
+
+          client.println("<br>");
+
+          client.println("</body>");
+          client.println("</html>");
+
+          delay(1);
+
+
+          
       
-      // Web Page Heading
-      client.println("<body><h1>ESP32 Web Server Node A</h1>");
-      client.println("<h2>" + incoming + "</h2>");
-      
-  
-      client.println("</body></html>");
+//      // Web Page Heading
+//      client.println("<html>");
+//      client.println("<body><h1>ESP32 Web Server Node A</h1>");
+//      client.println("<h2>" + incoming + "</h2>");
+//      //client.write("<h2>asd" + client.read() + "</h2>");
+//      client.write("<form>");
+//      client.write("<input type=\"text\"><br><br>");
+//      client.write("<input type=\"submit\" value=\"Submit\">");
+//      client.write("</form>");
+//      //client.write(client.read(client.println("sd")));
+//  
+//      client.println("</body></html>");
       
       // The HTTP response ends with another blank line
       client.println();
