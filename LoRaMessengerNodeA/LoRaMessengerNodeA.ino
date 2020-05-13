@@ -134,20 +134,20 @@ void loop() {
               }
 
 
-  if(client.find("message")){
+  if(client.find("message=")){
     
     //char* temp;
     Serial.println("found message");
-    
+    int index = 0;
     do { 
-      int index = client.read();
+       index = client.read();
       //itoa(index, temp, 10);
       Serial.println(index);
-      
+      index = 0;      
     } while (client.read() != -1);
     
-    int index = client.read();
-    Serial.println(index);
+    //int index = client.read();
+    //Serial.println(index);
     //Serial.println(temp);
   }
 
@@ -171,8 +171,8 @@ void loop() {
 
           //client.println("<script>var url = new URL(url_string); url.searchParams.get(\"c\");</script>");
 
-          client.println("<script> function getQueryVariable(variable){ var query = window.location.search.substring(1); var vars = query.split(\"&\"); for (var i=0;i<vars.length;i++) { var pair = vars[i].split(\"=\"); if(pair[0] == variable){return pair[1];} } return(false); } </script>");
-          client.println("<script> getQueryVariable(\"message\"); if(document.getElementById('number1').checked) { document.write(\"<h1>Hello member</h1>\"); }  </script>");
+          //client.println("<script> function getQueryVariable(variable){ var query = window.location.search.substring(1); var vars = query.split(\"&\"); for (var i=0;i<vars.length;i++) { var pair = vars[i].split(\"=\"); if(pair[0] == variable){return pair[1];} } return(false); } </script>");
+          //client.println("<script> getQueryVariable(\"message\"); if(document.getElementById('number1').checked) { document.write(\"<h1>Hello member</h1>\"); }  </script>");
 
           
           //client.println("var url = new URL(url_string);");
