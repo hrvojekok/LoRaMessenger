@@ -169,6 +169,15 @@ void loop() {
 
           client.println("Your message: <input type=text name='message' value='' size='25' ><br>");
 
+
+
+
+
+          client.println("<script type=\"text/javascript\"> function insertString() { let origString = message; let stringToAdd = \"#\"; for(let i = 0; i < origString.length(); i++){ if(i % 2 === 0){ newString = origString.slice(0, i) + stringToAdd + origString.slice(i); } } } </script> ");
+
+          //client.println(" <script type=\"text/javascript\"> function insertString() { let origString = \"GeeksGeeks\"; let stringToAdd = \"For\"; let indexPosition = 5; newString = origString.slice(0, indexPosition) + stringToAdd + origString.slice(indexPosition); document.querySelector('.outputString').textContent = newString; } </script> ");
+
+
           //client.println("<script>var url = new URL(url_string); url.searchParams.get(\"c\");</script>");
 
           //client.println("<script> function getQueryVariable(variable){ var query = window.location.search.substring(1); var vars = query.split(\"&\"); for (var i=0;i<vars.length;i++) { var pair = vars[i].split(\"=\"); if(pair[0] == variable){return pair[1];} } return(false); } </script>");
@@ -178,7 +187,7 @@ void loop() {
           //client.println("var url = new URL(url_string);");
           //client.println("url.searchParams.get(\"c\");");
           
-          client.println("<input type=submit name='submit' value='Send'>");
+          client.println("<input type=submit name='submit' onclick=\"insertString()\">");
 
           client.println("</form>");
 
