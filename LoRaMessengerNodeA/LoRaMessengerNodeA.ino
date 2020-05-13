@@ -120,6 +120,8 @@ void loop() {
 
             //added
             char c = client.read();
+            Serial.println(c);
+            header += c;
             //end of added
 
               //read char by char HTTP request
@@ -127,8 +129,28 @@ void loop() {
       
                 //store characters to string
                 helper += c;
-                Serial.print(c);
+                Serial.println(c);
+                Serial.println(header);
               }
+
+
+  if(client.find("message")){
+    
+    //char* temp;
+    Serial.println("found message");
+    
+    do { 
+      int index = client.read();
+      //itoa(index, temp, 10);
+      Serial.println(index);
+      
+    } while (client.read() != -1);
+    
+    int index = client.read();
+    Serial.println(index);
+    //Serial.println(temp);
+  }
+
 
   
       client.println("HTTP/1.1 200 OK");
@@ -168,6 +190,12 @@ void loop() {
           delay(1);
 
 
+char help;
+if(header.length() >= 1){
+  help = client.read();
+  Serial.print(help);
+  Serial.println("help");
+}
           
       
 //      // Web Page Heading
