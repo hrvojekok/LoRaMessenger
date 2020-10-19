@@ -162,6 +162,12 @@ void sendMessage(String outgoing) {
   LoRa.endPacket();
 }
 
+String convertAsciiToString(int ascii){
+  String stringFromAscii;
+  stringFromAscii = (char) ascii;
+  return stringFromAscii;
+}
+
 
 
 void receiveMessage(int packetSize) {
@@ -235,20 +241,26 @@ void loop() {
     Serial.println("found message");
     int index = 0;
     do { 
-       index = client.read();
+      index = client.read();
       //itoa(index, temp, 10);
-      Serial.println(index);
+      //Serial.println(index);
 
       //converting int to string
       std::string stringForSending = SSTR("i is: " << index);
       Serial.println(SSTR(index).c_str());
+
+      Serial.println(convertAsciiToString(index));
+      sendMessage(convertAsciiToString(index));
+
+      //if(client.find("&submit")){
+      //  break;
+      //}
       
-
-
-
-      sendMessage(SSTR(index).c_str());
+      stringForSending = "";
       index = 0;      
     } while (client.read() != -1);
+
+   
     
     //int index = client.read();
     //Serial.println(index);
