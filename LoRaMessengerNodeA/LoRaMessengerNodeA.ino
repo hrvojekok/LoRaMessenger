@@ -2,6 +2,11 @@
 #include <LoRa.h>
 #include <Wire.h>  
 #include <WiFi.h>
+#include <string>
+#include <sstream>
+
+#define SSTR( x ) static_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
 #include "SSD1306.h" 
 
 
@@ -29,6 +34,89 @@ const char* password = "nodeAnodeA";
 WiFiServer server(80);
 String header;
 
+//webpage begin
+/*const char Web_page[] PROGMEM = R"=====( 
+<!DOCTYPE html>
+<html>
+  <style>
+    .displayobject{
+       font-family: sans-serif;
+       margin: auto;
+       text-align: center;
+       width: 50%;
+       border: 3px solid #000000;
+       padding: 10px;
+       background: #558ED5;
+    }
+    h1 {
+      font-size: 36px;
+      color: white;
+    }
+    h4 {
+      font-size: 30px;
+      color: yellow;
+    }
+  </style>
+  <body>
+     <div class = "displayobject">
+       <h1>Update only webpage Values - no refresh needed!</h1><br>
+       <h4>Temperature reading: <span id="TEMPvalue">0</span>&deg</h4>
+       <h4>Humidity reading: <span id="HUMIvalue">0</span>%</h4>
+       <h4>Pressure reading: <span id="PRESvalue">0</span>hPa</h4><br>
+     </div>
+     <script>
+       setInterval(function() {getSensorData();}, 1000); // Call the update function every set interval e.g. 1000mS or 1-sec
+  
+       function getSensorData() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("TEMPvalue").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("GET", "TEMPread", true);
+        xhttp.send();
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("HUMIvalue").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("GET", "HUMIread", true);
+        xhttp.send();
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("PRESvalue").innerHTML = this.responseText;}
+        };  
+        xhttp.open("GET", "PRESread", true);
+        xhttp.send(); 
+      }
+    </script>
+  </body>
+</html>
+)=====";
+//webpage end
+
+void handleRoot() {
+  //String s = Web_page;             //Display HTML contents
+  server.send(200, "text/html", Web_page); //Send web page
+}
+
+void handleTEMP() { // This function is called by the script to update the sensor value, in this example random data!
+  // temp = String(bme.readTemperature(),2);
+  // server.send(200, "text/plain", temp));
+  server.send(200, "text/plain", String((float)random(195,209)/10,2)); //Send sensor reading when there's a client ajax request
+}
+
+void handleHUMI() { // This function is called by the script to update the sensor value, in this example random data!
+  server.send(200, "text/plain", String((float)random(501,523)/10,2)); //Send sensor reading when there's a client ajax request
+}
+*/
+
+
 void setup() {
   Serial.begin(9600);
 
@@ -53,7 +141,14 @@ void setup() {
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(IP);
-  
+
+  //start
+  //server.on("/", handleRoot);         // This displays the main webpage, it is called when you open a client connection on the IP address using a browser
+  //server.on("/TEMPread", handleTEMP); // To update Temperature called by the function getSensorData
+  //server.on("/HUMIread", handleHUMI); // To update Humidity called by the function getSensorData
+  //server.on("/PRESread", handlePRES); // To update Pressure called by the function getSensorData
+  //----------------------------------------------------------------
+ //end
   server.begin();
 
 }
@@ -143,6 +238,15 @@ void loop() {
        index = client.read();
       //itoa(index, temp, 10);
       Serial.println(index);
+
+      //converting int to string
+      std::string stringForSending = SSTR("i is: " << index);
+      Serial.println(SSTR(index).c_str());
+      
+
+
+
+      sendMessage(SSTR(index).c_str());
       index = 0;      
     } while (client.read() != -1);
     
