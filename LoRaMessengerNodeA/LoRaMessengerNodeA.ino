@@ -193,9 +193,9 @@ void receiveMessage(int packetSize) {
     return;
   }
 
-  Serial.print("Received data " + incoming);
-  Serial.print(" from 0x" + String(sender, HEX));
-  Serial.println(" to 0x" + String(recipient, HEX));
+  //Serial.print("Received data " + incoming);
+  //Serial.print(" from 0x" + String(sender, HEX));
+  //Serial.println(" to 0x" + String(recipient, HEX));
 }
 
 void loop() {
@@ -203,9 +203,9 @@ void loop() {
       String sensorData = String(count++);
       sendMessage(sensorData);
   
-      Serial.print("Sending data " + sensorData);
-      Serial.print(" from 0x" + String(localAddress, HEX));
-      Serial.println(" to 0x" + String(destinationAddress, HEX));
+      //Serial.print("Sending data " + sensorData);
+      //Serial.print(" from 0x" + String(localAddress, HEX));
+      //Serial.println(" to 0x" + String(destinationAddress, HEX));
   
       lastSendTime = millis();
       interval = random(2000) + 1000;
@@ -240,6 +240,8 @@ void loop() {
     //char* temp;
     Serial.println("found message");
     int index = 0;
+    int countSymbols = 0;
+    std::string field;
     do { 
       index = client.read();
       //itoa(index, temp, 10);
@@ -247,20 +249,27 @@ void loop() {
 
       //converting int to string
       std::string stringForSending = SSTR("i is: " << index);
-      Serial.println(SSTR(index).c_str());
+      //Serial.println(SSTR(index).c_str());
 
       Serial.println(convertAsciiToString(index));
-      sendMessage(convertAsciiToString(index));
+      //sendMessage(convertAsciiToString(index));
 
-      //if(client.find("&submit")){
-      //  break;
-      //}
       
+
+//      if(client.find("&submit")){
+//        break;
+//      }
+      countSymbols++;
       stringForSending = "";
       index = 0;      
     } while (client.read() != -1);
 
-   
+   for(int i=0; i<countSymbols; i++){
+      //field[i] = convertAsciiToString(index);
+      field.append(1,index);
+   }
+
+   sendMessage(field);
     
     //int index = client.read();
     //Serial.println(index);
@@ -315,12 +324,12 @@ void loop() {
           delay(1);
 
 
-char help;
-if(header.length() >= 1){
-  help = client.read();
-  Serial.print(help);
-  Serial.println("help");
-}
+//char help;
+//if(header.length() >= 1){
+//  help = client.read();
+//  Serial.print(help);
+//  Serial.println("help");
+//}
           
       
 //      // Web Page Heading
